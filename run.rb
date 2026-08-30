@@ -1,10 +1,34 @@
-raise 'Missing day and/or part arguments' if ARGV.count <= 1
+#!/usr/bin/env ruby
+require 'optparse'
 
-day, part = ARGV.map { |arg| arg[-1].to_i }.values_at(0, 1) # => e.g. 1, 1
+options = {}
+parser = OptionParser.new do |parser|
+  parser.on('-i INPUT', '--input INPUT') { |v| options[:input] = v }
+  parser.on('-d DAY', '--day DAY', Integer) { |v| options[:day] = v }
+  parser.on('-p PART', '--part PART', Integer) { |v| options[:part] = v }
+end
+parser.parse!
 
-require "./solutions/day#{day}/part#{part}"
+missing_input = !options.keys.include?(:input)
+missing_day = !options.keys.include?(:day)
+missing_part = !options.keys.include?(:part)
 
-part_class = Object.const_get("Day#{day}::Part#{part}")
-puzzle_input = File.read("./solutions/day#{day}/input")
+if missing_input || missing_day || missing_part
+  warn 'Input argument is required' if missing_input
+  warn 'Day argument is required' if missing_day
+  warn 'Part argument is required' if missing_part
+  exit 1
+end
 
-puts part_class.new(puzzle_input).process
+require './solution_classes_map.rb'
+
+solution_class = SOLUTION_CLASSES_MAP[options[:day]][options[:part]]
+
+if solution_class.nil?
+  warn 'Solution class not found in SOLUTION_CLASSES_MAP'
+  exit 1
+end
+
+puzzle_input = File.read(options[:input])
+
+puts solution_class.process(puzzle_input)
