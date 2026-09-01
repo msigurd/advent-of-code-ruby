@@ -30,5 +30,10 @@ if solution_class.nil?
 end
 
 puzzle_input = File.read(options[:input])
+start_time = Time.now
+puzzle_answer = solution_class.process(puzzle_input)
+elapsed_time = Time.now - start_time
 
-puts solution_class.process(puzzle_input)
+puts "Answer: #{puzzle_answer}\n"
+puts "Done in #{elapsed_time.round(4)} sec"
+
