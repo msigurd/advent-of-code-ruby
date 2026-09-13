@@ -34,7 +34,9 @@ start_time = Time.now
 puzzle_answer = solution_class.process(puzzle_input)
 elapsed_time = Time.now - start_time
 
-def colorize(value, color_code) = "\e[#{color_code}m#{value}\e[0m"
+def colorize(value, color_code)
+  "\e[#{color_code}m#{value}\e[0m"
+end
 
 puts "Answer: #{colorize(puzzle_answer, 36)}\n"
 puts "Done in #{colorize(elapsed_time.round(4), 32)} sec"
